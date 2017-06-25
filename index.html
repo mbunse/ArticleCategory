@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <body>
+            <script type="text/javascript">
+    function get_action(form) {
+        document.getElementById("cat").textContent = ""
+        var request = new XMLHttpRequest();
+        request.open("GET","http://localhost:4000/getArtCat?article="+form.article.value);
+        request.addEventListener('load', function(event) {
+            document.getElementById("cat").textContent = request.responseText;
+        });
+        request.send();
+        
+        //document.getElementById("cat").textContent = form.article.value
+        return false
+    }
+    </script>
+        <form onsubmit="return get_action(this);">
+            <label>Artikelbezeichnung</label>
+            <input type="text" name="article"/>
+            <input type="submit" value="Anfragen"/>
+        </form>
+        <div id="cat_label">Kategorie bei eBay:</div>
+        <div id="cat"></div>
+    </body>
+</html>
