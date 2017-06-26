@@ -11,8 +11,8 @@ def getArticleCategoriesFromEbay(article):
     r = requests.get(url, params={'_nkw': article})
 
     # Extract link to first product mentioned
-    soup = BeautifulSoup(r.text, 'html.parser')
-    link_first_product = soup.find(id="ListViewInner").find('li', recursive=False).find('a').get('href')
+    soup = BeautifulSoup(r.text, 'lxml')
+    link_first_product = soup.find(id="ListViewInner").find('li', class_="sresult", recursive=False).find('a').get('href')
 
     # 
     soup = BeautifulSoup(requests.get(link_first_product).text, 'html.parser')
@@ -28,7 +28,10 @@ def test():
     '''
     Test functions in this module
     '''
-    
+    article = "LIQROCK E-MTB 29Zoll 500Wh Bosch Performance Line CX Modell"
+    categories = ['Sport', 'Radsport', u'Elektrofahrr\xe4der']
+    assert(getArticleCategoriesFromEbay(article)==categories)
+
     article = "Pioneer CDJ-2000 NXS2"
     categories = ['TV, Video & Audio', 'Veranstaltungs- & DJ-Equipment', 'DJ-CD-/MP3-Player']
     assert(getArticleCategoriesFromEbay(article)==categories)
