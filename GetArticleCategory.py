@@ -8,20 +8,23 @@ def getArticleCategoriesFromEbay(article):
     '''
     # Search for product
     url = 'https://www.ebay.de/sch/i.html'
-    r = requests.get(url, params={'_nkw': article})
+    r = requests.get(url, params={'_nkw': ' '.join(article.split()[:5])})
 
-    # Extract link to first product mentioned
-    soup = BeautifulSoup(r.text, 'lxml')
-    link_first_product = soup.find(id="ListViewInner").find('li', class_="sresult", recursive=False).find('a').get('href')
+    try:
+        # Extract link to first product mentioned
+        soup = BeautifulSoup(r.text, 'lxml')
+        link_first_product = soup.find(id="ListViewInner").find('li', class_="sresult", recursive=False).find('a').get('href')
+    
+        # 
+        soup = BeautifulSoup(requests.get(link_first_product).text, 'lxml')
+        article_cats = []
+        for cat in soup.find(id="vi-VR-brumb-lnkLst").find('td').find_all('span'):
+            text = cat.get_text()
+            if not text.startswith("Mehr anzeigen"):
+                article_cats.append(cat.get_text())
 
-    # 
-    soup = BeautifulSoup(requests.get(link_first_product).text, 'html.parser')
-    article_cats = []
-    for cat in soup.find(id="vi-VR-brumb-lnkLst").find_all('span'):
-        text = cat.get_text()
-        if not text.startswith("Mehr anzeigen"):
-            article_cats.append(cat.get_text())
-
+    except AttributeError:
+        return ["Unbekannt"]
     return article_cats
 
 def test():
