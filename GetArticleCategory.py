@@ -13,7 +13,7 @@ def getArticleCategoriesFromEbay(article):
     try:
         # Extract link to first product mentioned
         soup = BeautifulSoup(r.text, 'lxml')
-        link_first_product = soup.find(id="ListViewInner").find('li', class_="sresult", recursive=False).find('a').get('href')
+        link_first_product = soup.find('div', id="mainContent").find("ul").find('li', class_="s-item", recursive=False).find('a').get('href')
     
         # 
         soup = BeautifulSoup(requests.get(link_first_product).text, 'lxml')
